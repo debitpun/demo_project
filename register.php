@@ -1,3 +1,54 @@
+<?php
+
+$error_fname = '';
+$error_lname = '';
+$error_email = '';
+$error_password = '';
+$error_rpassword = '';
+
+
+
+if ($_POST) {
+
+    $fname = $_POST["fname"];
+    $lname = $_POST["lname"];
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $rpassword = $_POST["rpassword"];
+
+    if($fname == ''){
+        $error_fname = "First name require!";
+    } 
+    elseif(strlen($fname) <= 2 ) {
+        $error_fname = "more than 2 letter require!";
+    }
+    if($lname == ''){
+        $error_lname = "last name require!";
+    }
+    if($email == ''){
+        $error_email = "email name require!";
+    }
+    if($password == ''){
+        $error_password = "password name require!";
+    }
+    if($rpassword == ''){
+        $error_rpassword = "password name require!";
+    }
+    
+    
+    
+
+    echo $fname . $lname .  $email . $password . $rpassword  ;
+}
+
+
+?>
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,48 +87,47 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
+                            <form class="user" method="post" action="register.php" >
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
+                                            placeholder="First Name" name="fname" >
+                                            <span style="color: red; font-size: 13px; " ><?php echo $error_fname; ?></span>
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                            placeholder="Last Name" name="lname" >
+                                            <span style="color: red; font-size: 13px; " ><?php echo $error_lname; ?></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
+                                        placeholder="Email Address" name="email" >
+                                        <span style="color: red; font-size: 13px; " ><?php echo $error_email; ?></span>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                            id="exampleInputPassword" placeholder="Password" name="password" >
+                                            <span style="color: red; font-size: 13px; " ><?php echo $error_password; ?></span>
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                            id="exampleRepeatPassword" placeholder="Repeat Password" name="rpassword" >
+                                            <span style="color: red; font-size: 13px; " ><?php echo $error_rpassword; ?></span>
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
+                                <button type="submit"  class="btn btn-primary btn-user btn-block" >
                                     Register Account
-                                </a>
+                                </button>
                                 <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
                             </form>
                             <hr>
                             <div class="text-center">
                                 <a class="small" href="forgot-password.html">Forgot Password?</a>
                             </div>
                             <div class="text-center">
-                                <a class="small" href="login.html">Already have an account? Login!</a>
+                                <a class="small" href="login.php">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>
