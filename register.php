@@ -6,47 +6,64 @@ $error_email = '';
 $error_password = '';
 $error_rpassword = '';
 
-
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+  }
 
 if ($_POST) {
 
-    $fname = $_POST["fname"];
-    $lname = $_POST["lname"];
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-    $rpassword = $_POST["rpassword"];
+    $fname = test_input($_POST["fname"]);
+    $lname = test_input($_POST["lname"]);
+    $email = test_input($_POST["email"]);
+    $password = test_input($_POST["password"]);
+    $rpassword = test_input($_POST["rpassword"]);
 
-    if($fname == ''){
-        $error_fname = "First name require!";
-    } 
-    elseif(strlen($fname) <= 2 ) {
-        $error_fname = "more than 2 letter require!";
+    function nameChecker($name){
+        $display= '';
+        if($name == ''){
+            $display = "Please provide a name";
+        } 
+        elseif(strlen($name) <= 2 ) {
+            $display = "Oops! your name is invalid";
+        }   
+        return $display;       
     }
-    if($lname == ''){
-        $error_lname = "last name require!";
-    }
+
+    $error_fname =  nameChecker($fname);
+    $error_lname = nameChecker($lname);
+
     if($email == ''){
         $error_email = "email name require!";
     }
-    if($password == ''){
-        $error_password = "password name require!";
-    }
-    if($rpassword == ''){
-        $error_rpassword = "password name require!";
-    }
     
-    
-    
+    function repeatPassword($password, $rpassword){
+        $display = '';
 
-    echo $fname . $lname .  $email . $password . $rpassword  ;
+        if($password == ''){
+            $display = "Please enter a password"; 
+        }
+        if($rpassword == ''){
+            $display = "please enter a password";
+        }
+         elseif($password != $rpassword){
+            $display = 'Password doesnot match!';
+        }
+        return $display;
+    }
+    
+    $error_password = repeatPassword($password,$rpassword);
+    $error_rpassword = repeatPassword($password,$rpassword);
+
+    
+    
+    echo $fname;
 }
 
 
 ?>
-
-
-
-
 
 
 <!DOCTYPE html>
