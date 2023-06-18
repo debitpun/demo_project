@@ -1,11 +1,30 @@
+
+<?php
+    session_start();
+
+
+    if(isset($_SESSION["is_login"])&& $_SESSION["is_login"] == True ){
+        header("Location: admin/index.php");
+    } 
+    
+?>
+
 <?php
 
+
+// if valid is true it store value in database
+$valid = true;
+
+
+// if the input is empty the following variable generate error
 $error_fname = '';
 $error_lname = '';
 $error_email = '';
 $error_password = '';
 $error_rpassword = '';
 
+
+// validate/sanitize input
 function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -13,53 +32,73 @@ function test_input($data) {
     return $data;
   }
 
-if ($_POST) {
 
+// To check if $_POST exists
+if ($_POST) {
     $fname = test_input($_POST["fname"]);
     $lname = test_input($_POST["lname"]);
     $email = test_input($_POST["email"]);
     $password = test_input($_POST["password"]);
     $rpassword = test_input($_POST["rpassword"]);
 
-    function nameChecker($name){
-        $display= '';
+// display the mssg error if empty and set valid to false
+    function nameChecker($name){ 
+        $display = '';       
         if($name == ''){
             $display = "Please provide a name";
+            $GLOBALS['valid']  = false;
         } 
         elseif(strlen($name) <= 2 ) {
             $display = "Oops! your name is invalid";
+            $GLOBALS['valid']  = false;
         }   
         return $display;       
     }
-
-    $error_fname =  nameChecker($fname);
-    $error_lname = nameChecker($lname);
-
     if($email == ''){
         $error_email = "email name require!";
-    }
-    
+    }  
     function repeatPassword($password, $rpassword){
         $display = '';
-
+        
         if($password == ''){
             $display = "Please enter a password"; 
+            $GLOBALS['valid'] = false;
         }
         if($rpassword == ''){
             $display = "please enter a password";
+            $GLOBALS['valid'] = false;
         }
-         elseif($password != $rpassword){
+        elseif($password != $rpassword){
             $display = 'Password doesnot match!';
+            $GLOBALS['valid'] = false;
         }
         return $display;
     }
-    
+
+
+ // call the function and store it in error generate variable
+    $error_fname =  nameChecker($fname);
+    $error_lname = nameChecker($lname);
     $error_password = repeatPassword($password,$rpassword);
     $error_rpassword = repeatPassword($password,$rpassword);
+    
+    
 
-    
-    
-    echo $fname;
+    $passwords = md5($password);
+
+//link the config/db.php to establish connection to database
+    require 'config/db.php';
+
+// if the valid is true the the following condition run
+    if ($valid){
+        $sql = "INSERT INTO test (first_name, last_name, email, password, role)
+        VALUES ('$fname', '$lname', '$email','$passwords','0')";
+        if (mysqli_query($conn, $sql)) {
+        echo "New record created successfully";
+        } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        }
+    } 
 }
 
 

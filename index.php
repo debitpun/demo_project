@@ -3,7 +3,7 @@
     session_start();
 
     // Set session variables
-    $_SESSION["is_login"] = TRUE;
+
 
     // echo $_SESSION["is_login"];
 

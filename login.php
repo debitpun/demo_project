@@ -10,6 +10,70 @@
     
 ?>
 
+<?php
+
+
+// if valid is true it store value in database
+$valid = true;
+
+
+// if the input is empty the following variable generate error
+
+$error_email = '';
+$error_password = '';
+
+
+// validate/sanitize input
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+  }
+
+
+// To check if $_POST exists
+if ($_POST) {
+    $email = test_input($_POST["email"]);
+    $password = test_input($_POST["password"]);
+// display the mssg error if empty and set valid to false
+
+    if($email == ''){
+        $error_email = "email name require!";
+    }  
+    
+
+    $passwords = md5($password);
+
+//link the config/db.php to establish connection to database
+    require 'config/db.php';
+
+// if the valid is true the the following condition run
+    if ($valid){
+        $sql = "SELECT * FROM test WHERE email='$email' AND password ='$passwords'";
+        // die($sql);
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+        echo "id: " . $row["id"]. " - email: " . $row["email"]. "<br>";
+        $_SESSION["is_login"] = TRUE;
+        $_SESSION["id"]= $row["id"];
+        $_SESSION["email"]= $row["email"];
+        header("Location: admin/index.php");
+
+    }
+    } else {
+    echo "email, password not match";
+    }
+
+    } 
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,15 +117,15 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" action="login.php" method="post">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                                placeholder="Enter Email Address..." name="email">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                                id="exampleInputPassword" placeholder="Password" name="password">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -70,9 +134,9 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
-                                        </a>
+                                        </button>
                                         <hr>
                                         
                                     </form>
